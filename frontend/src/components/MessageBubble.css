@@ -1,0 +1,48 @@
+/* Bubble wrapper */
+.bubble {
+  display: flex;
+  align-items: flex-start;
+  max-width: 80%;
+  margin: 10px;
+  gap: 8px;
+  word-wrap: break-word;
+  white-space: pre-wrap;
+}
+
+/* Avatar (emoji) */
+.avatar {
+  font-size: 1.3rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Chat bubble content */
+.bubble-content {
+  padding: 10px 14px;
+  border-radius: 12px;
+  font-size: 0.95rem;
+  line-height: 1.4;
+  word-break: break-word;
+}
+
+/* User bubble (right side) */
+.user-bubble {
+  align-self: flex-end;
+  flex-direction: row-reverse;
+}
+.user-bubble .bubble-content {
+  background-color: #10a37f;
+  color: #fff;
+  border-bottom-right-radius: 4px;
+}
+
+/* AI bubble (left side) */
+.ai-bubble {
+  align-self: flex-start;
+}
+.ai-bubble .bubble-content {
+  background-color: #40414f;
+  color: #ececec;
+  border-bottom-left-radius: 4px;
+}

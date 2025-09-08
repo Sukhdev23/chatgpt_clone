@@ -1,0 +1,18 @@
+/* ===== Global Dark Theme (ChatGPT Style) ===== */
+:root {
+  --bg-dark: #343541;
+  --bg-darker: #202123;
+  --bg-light: #444654;
+  --text-light: #ececf1;
+  --text-muted: #a0a0a0;
+  --accent: #10a37f;
+}
+
+body {
+  margin: 0;
+  font-family: "Inter", sans-serif;
+  background-color: var(--bg-dark);
+  color: var(--text-light);
+  height: 100vh;
+}
+
