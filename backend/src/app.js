@@ -21,4 +21,9 @@ app.get('/', (req, res) => {
 app.use('/api/auth', authRoutes);
 app.use('/api', chatRoutes);
 
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "dist", "index.html")); // Vite
+  // res.sendFile(path.join(__dirname, "build", "index.html")); // CRA
+});
+
 module.exports = app;
