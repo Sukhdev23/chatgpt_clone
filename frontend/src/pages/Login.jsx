@@ -19,7 +19,7 @@ const Login = () => {
 
     // send to backend (axios/fetch)
     console.log("Login Data:", formData);
-axios.post("http://localhost:3000/api/auth/login", formData, {
+axios.post("https://chatgpt-clone-90mn.onrender.com/api/auth/login", formData, {
   withCredentials: true,   // ⚡ Add this line
 })
 .then((response) => {

@@ -33,7 +33,7 @@ const Register = () => {
     e.preventDefault();
     console.log("Register Data:", formData);
     axios
-      .post("http://localhost:3000/api/auth/register", formData, {
+      .post("https://chatgpt-clone-90mn.onrender.com/api/auth/register", formData, {
         withCredentials: true,
       })
       .then(
