@@ -10,7 +10,10 @@ const chatModel = require("../models/chat.model");
 function initsocketserver(httpServer) {
   const io = new Server(httpServer, {
     cors: {
-      origin: "http://localhost:5173", // frontend URL
+      origin: [
+        "http://localhost:5173",
+        "https://chatgpt-clone-ruzm.onrender.com",
+      ],
       methods: ["GET", "POST"],
       credentials: true,
     },
@@ -44,7 +47,8 @@ function initsocketserver(httpServer) {
 
     socket.on("ai-message", async (rawData) => {
       try {
-        const data = typeof rawData === "string" ? JSON.parse(rawData) : rawData;
+        const data =
+          typeof rawData === "string" ? JSON.parse(rawData) : rawData;
         console.log("📩 Parsed Message:", data);
 
         // User message + vector parallel
@@ -78,7 +82,7 @@ function initsocketserver(httpServer) {
           .lean();
 
         const stm = chatHistory.reverse().map((item) => ({
-         role: item.role === "user" ? "user" : "model",
+          role: item.role === "user" ? "user" : "model",
           parts: [{ text: item.content }],
         }));
 

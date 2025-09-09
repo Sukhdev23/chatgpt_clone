@@ -19,11 +19,11 @@ const Login = () => {
 
     // send to backend (axios/fetch)
     console.log("Login Data:", formData);
-axios.post("https://chatgpt-clone-90mn.onrender.com/api/auth/login", formData, {
+axios.post("https://chatgpt-clone-ruzm.onrender.com/api/auth/login", formData, {
   withCredentials: true,   // ⚡ Add this line
 })
 .then((response) => {
-  console.log("Login Successful:", response.data);
+  console.log("Login Successful1:", response.data);
   navigate("/");
 })
 .catch((error) => {

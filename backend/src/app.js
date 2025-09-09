@@ -7,9 +7,11 @@ const cors = require('cors');
 const path = require('path');
 
 app.use(cors({
-  origin: 'http://localhost:5173',
+  origin: ["http://localhost:5173", "https://chatgpt-clone-ruzm.onrender.com"],
+  methods: ["GET", "POST"],
   credentials: true
 }));
+
 
 app.use(express.json());    
 

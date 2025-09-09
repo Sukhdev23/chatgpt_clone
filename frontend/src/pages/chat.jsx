@@ -12,7 +12,7 @@ import axios from "axios";
 import "./chat.css";
 import { useNavigate } from "react-router-dom"; // ✅ add this
 
-const socket = io("https://chatgpt-clone-90mn.onrender.com", { withCredentials: true });
+const socket = io("https://chatgpt-clone-ruzm.onrender.com", { withCredentials: true });
 
 const Chat = () => {
   const chats = useSelector((state) => state.chat.chats);
@@ -65,7 +65,7 @@ const Chat = () => {
   useEffect(() => {
     async function fetchChats() {
       try {
-        const res = await axios.get("https://chatgpt-clone-90mn.onrender.com/api/chats", {
+        const res = await axios.get("https://chatgpt-clone-ruzm.onrender.com/api/chats", {
           withCredentials: true,
         });
         const chatsFromDb = Array.isArray(res.data)
@@ -121,7 +121,7 @@ const Chat = () => {
     if (!newChatTitle.trim()) return;
     try {
       const res = await axios.post(
-        "https://chatgpt-clone-90mn.onrender.com/api/chats",
+        "https://chatgpt-clone-ruzm.onrender.com/api/chats",
         { title: newChatTitle },
         { withCredentials: true }
       );
