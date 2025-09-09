@@ -4,6 +4,7 @@ const app = express();
 const authRoutes = require('./routes/auth.route')
 const chatRoutes = require('./routes/chat.route');
 const cors = require('cors');
+const path = require('path');
 
 app.use(cors({
   origin: 'http://localhost:5173',
@@ -21,9 +22,10 @@ app.get('/', (req, res) => {
 app.use('/api/auth', authRoutes);
 app.use('/api', chatRoutes);
 
+app.use(express.static("public"));
 app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, "dist", "index.html")); // Vite
-  // res.sendFile(path.join(__dirname, "build", "index.html")); // CRA
+  res.sendFile(path.join(__dirname, "public", "index.html"));
 });
+
 
 module.exports = app;
