@@ -12,7 +12,11 @@ import axios from "axios";
 import "./chat.css";
 import { useNavigate } from "react-router-dom"; // ✅ add this
 
-const socket = io("https://chatgpt-clone-ruzm.onrender.com", { withCredentials: true });
+const socket = io("https://chatgpt-clone-ruzm.onrender.com", {
+  transports: ["websocket"],  // force only websocket
+  withCredentials: true,
+});
+
 
 const Chat = () => {
   const chats = useSelector((state) => state.chat.chats);
@@ -65,9 +69,11 @@ const Chat = () => {
   useEffect(() => {
     async function fetchChats() {
       try {
-        const res = await axios.get("https://chatgpt-clone-ruzm.onrender.com/api/chats", {
+        const res = await axios.get(" ", {
           withCredentials: true,
         });
+        console.log(res);
+        
         const chatsFromDb = Array.isArray(res.data)
           ? res.data.map((chat) => ({ ...chat, messages: chat.messages || [] }))
           : [{ title: "Chat", messages: [] }];

@@ -15,7 +15,7 @@ function initsocketserver(httpServer) {
         "https://chatgpt-clone-ruzm.onrender.com",
       ],
       methods: ["GET", "POST"],
-      credentials: true,
+      credentials: true
     },
   });
 
