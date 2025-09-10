@@ -17,10 +17,6 @@ app.use(express.json());
 
 app.use(CookieParser());//
 
-app.get('/', (req, res) => {
-  res.send('Hello World!');
-});
-
 app.use('/api/auth', authRoutes);
 app.use('/api', chatRoutes);
 
