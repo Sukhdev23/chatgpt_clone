@@ -1,10 +1,11 @@
-const CookieParser = require('cookie-parser');
-const express = require('express');
-const app = express();
+
 const authRoutes = require('./routes/auth.route')
 const chatRoutes = require('./routes/chat.route');
+const express = require('express');
+const app = express();
 const cors = require('cors');
 const path = require('path');
+const cookieParser = require("cookie-parser");
 
 app.use(cors({
   origin: ["http://localhost:5173", "https://chatgpt-clone-ruzm.onrender.com"],
@@ -15,7 +16,7 @@ app.use(cors({
 
 app.use(express.json());    
 
-app.use(CookieParser());//
+app.use(cookieParser());
 
 app.use('/api/auth', authRoutes);
 app.use('/api', chatRoutes);

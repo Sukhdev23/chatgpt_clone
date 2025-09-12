@@ -12,10 +12,7 @@ import axios from "axios";
 import "./chat.css";
 import { useNavigate } from "react-router-dom"; // ✅ add this
 
-const socket = io("https://chatgpt-clone-ruzm.onrender.com", {
-  transports: ["websocket"],  // force only websocket
-  withCredentials: true,
-});
+// socket will be created per-component so we can attach auth token
 
 
 const Chat = () => {
@@ -28,14 +25,18 @@ const Chat = () => {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const textareaRef = useRef(null);
   const chatBoxRef = useRef(null);
+  const socketRef = useRef(null);
   const navigate = useNavigate(); // ✅ add this
+
+  // send cookies by default for all axios requests (backend uses cookie auth)
+  axios.defaults.withCredentials = true;
 
 
   const handleSend = async () => {
     if (!input.trim()) return;
     const currentChat = chats[activeChatIndex];
     const chatId = currentChat._id;
-    dispatch(addMessage({ chat: chatId, role: "user", content: input }));
+  dispatch(addMessage({ chat: chatId, role: "user", content: input }));
     setInput("");
     if (textareaRef.current) textareaRef.current.style.height = "40px";
     try {
@@ -44,7 +45,16 @@ const Chat = () => {
       //   { content: input },
       //   { withCredentials: true }
       // );
-      socket.emit("ai-message", { chat: chatId, content: input });
+      // send via socket if connected, else fall back to HTTP (if backend supports it)
+      if (socketRef.current && socketRef.current.connected) {
+        socketRef.current.emit("ai-message", { chat: chatId, content: input });
+      } else {
+        // optional: attempt HTTP POST if socket not available
+        await axios.post(
+          `https://chatgpt-clone-ruzm.onrender.com/api/chats/${chatId}/messages`,
+          { content: input }
+        );
+      }
     } catch (err) {
       console.error(err);
       dispatch(
@@ -67,9 +77,40 @@ const Chat = () => {
   };
 
   useEffect(() => {
+    // install interceptor to catch 401 globally and redirect to login
+    const interceptorId = axios.interceptors.response.use(
+      (response) => response,
+      (error) => {
+        if (error?.response?.status === 401) {
+          navigate("/login");
+        }
+        return Promise.reject(error);
+      }
+    );
+
     async function fetchChats() {
       try {
-        const res = await axios.get(" ", {
+        // attach token from localStorage if available
+        const token = localStorage.getItem("token");
+        if (token) {
+          axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+        }
+
+        // create socket with token auth (so server can verify websocket)
+        if (!socketRef.current) {
+          try {
+            const s = io("https://chatgpt-clone-ruzm.onrender.com", {
+              transports: ["websocket"],
+              withCredentials: true,
+              auth: { token: token || null },
+            });
+            socketRef.current = s;
+          } catch {
+            console.warn("Socket init failed");
+          }
+        }
+
+        const res = await axios.get("https://chatgpt-clone-ruzm.onrender.com/api/chats", {
           withCredentials: true,
         });
         console.log(res);
@@ -78,37 +119,49 @@ const Chat = () => {
           ? res.data.map((chat) => ({ ...chat, messages: chat.messages || [] }))
           : [{ title: "Chat", messages: [] }];
         dispatch(setChats(chatsFromDb));
-      }  catch (err) {
-    console.error("Failed to fetch chats:", err);
-    if (err.response?.status === 401) {
-      navigate("/login"); // ✅ redirect
-    }
-  }
+      } catch (err) {
+        // If unauthorized, interceptor already navigates; return early to avoid noisy logs
+        if (err?.response?.status === 401) return;
+        console.error("Failed to fetch chats:", err);
+      }
     }
     fetchChats();
 
-    // ✅ When AI responds
-    socket.on("ai-response", async (data) => {
-      dispatch(
-        addMessage({ chat: data.chat, role: "model", content: data.content })
-      );
-    });
+    // When AI responds (wire up socket listeners if socket exists)
+    if (socketRef.current) {
+      socketRef.current.on("ai-response", async (data) => {
+        dispatch(
+          addMessage({ chat: data.chat, role: "model", content: data.content })
+        );
+      });
 
-    socket.on("ai-error", (err) => {
-      dispatch(
-        addMessage({
-          chat: err.chat,
-          role: "model",
-          content: "⚠️ AI error.",
-        })
-      );
-    });
+      socketRef.current.on("ai-error", (err) => {
+        dispatch(
+          addMessage({
+            chat: err.chat,
+            role: "model",
+            content: "⚠️ AI error.",
+          })
+        );
+      });
+    }
 
     return () => {
-      socket.off("ai-response");
-      socket.off("ai-error");
+      if (socketRef.current) {
+        socketRef.current.off("ai-response");
+        socketRef.current.off("ai-error");
+        // optional: disconnect socket when component unmounts
+        try {
+          socketRef.current.disconnect();
+        } catch (e) {
+          /* ignore */
+        }
+        socketRef.current = null;
+      }
+      // cleanup axios interceptor
+      axios.interceptors.response.eject(interceptorId);
     };
-  }, [dispatch]);
+  }, [dispatch, navigate]);
 
   useEffect(() => {
     if (chatBoxRef.current) {

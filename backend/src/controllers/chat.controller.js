@@ -1,5 +1,6 @@
 const chatModel = require('../models/chat.model');
-const messageModel = require('../models/message.model');  // import message model
+const messageModel = require('../models/message.model'); 
+const mongoose = require("mongoose");
 
 // ✅ Create Chat
 async function createChat(req, res) {
@@ -12,7 +13,7 @@ async function createChat(req, res) {
 
   try {
     const newChat = await chatModel.create({ 
-      user: user.id,
+      user: mongoose.Types.ObjectId(user._id || user.id),
       title,
       lastActivity: new Date()
     });
@@ -36,17 +37,16 @@ async function createChat(req, res) {
 // ✅ Get Chats with Messages
 async function getChats(req, res) {
   try {
-    const userId = req.user._id || req.user.id;
+    const userId = mongoose.Types.ObjectId(req.user._id || req.user.id);
+    console.log("Searching chats for userId:", userId);
 
-    // 1. Fetch all chats of logged-in user
     const chats = await chatModel.find({ user: userId }).sort({ lastActivity: -1 });
 
-    // 2. Fetch messages for each chat
     const chatsWithMessages = await Promise.all(
       chats.map(async (chat) => {
         const messages = await messageModel
           .find({ chat: chat._id })
-          .sort({ createdAt: 1 }); // oldest → newest
+          .sort({ createdAt: 1 });
         return {
           ...chat.toObject(),
           messages
@@ -57,9 +57,10 @@ async function getChats(req, res) {
     res.status(200).json(chatsWithMessages);
   } catch (error) {
     console.error("Get Chats Error:", error);
-    res.status(500).json({ error: 'Failed to retrieve chats' });
+    res.status(500).json({ error: "Failed to retrieve chats" });
   }
 }
+
 
 module.exports = {
   createChat,

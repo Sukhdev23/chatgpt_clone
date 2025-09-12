@@ -54,9 +54,10 @@ async function loginUser(req, res) {
     expiresIn: "1d",
   });
   res.cookie("token", token, {
-    httpOnly: true, // client-side JS access nahi karega
-    secure: false, // dev ke liye false, production (https) me true
-    sameSite: "none",
+    httpOnly: true,
+    secure: true, // production (https) ke liye true
+    sameSite: "none", // cross-origin ke liye zaroori
+    maxAge: 24 * 60 * 60 * 1000, // 1 din
   });
 
   res.status(200).json({ message: "User logged in successfully", token, user });
