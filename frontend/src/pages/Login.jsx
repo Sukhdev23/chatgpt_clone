@@ -24,7 +24,7 @@ axios.post("https://chatgpt-clone-ruzm.onrender.com/api/auth/login", formData, {
 })
 .then((response) => {
   console.log("Login Successful1:", response.data);
-  navigate("/");
+        navigate("/");
 })
 .catch((error) => {
   console.error("Login Error:", error.response?.data || error.message);

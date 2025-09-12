@@ -4,9 +4,9 @@ const Authmiddleware = require('../middlewares/auth.middleware')
 const Router = express.Router();
 const { getMessages} = require('../controllers/message.controller');
 
-Router.post('/chats',Authmiddleware,chatController.createChat);
-Router.get('/chats', Authmiddleware, chatController.getChats);
+Router.post('/',Authmiddleware,chatController.createChat);
+Router.get('/', Authmiddleware, chatController.getChats);
 
-Router.get("/chats/:id/messages", Authmiddleware, getMessages);
+Router.get("/:id/messages", Authmiddleware, getMessages);
 
 module.exports = Router;

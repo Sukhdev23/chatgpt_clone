@@ -13,7 +13,7 @@ async function createChat(req, res) {
 
   try {
     const newChat = await chatModel.create({ 
-      user: mongoose.Types.ObjectId(user._id || user.id),
+      user:user.id,
       title,
       lastActivity: new Date()
     });
@@ -37,7 +37,7 @@ async function createChat(req, res) {
 // ✅ Get Chats with Messages
 async function getChats(req, res) {
   try {
-    const userId = mongoose.Types.ObjectId(req.user._id || req.user.id);
+    const userId = req.user.id 
     console.log("Searching chats for userId:", userId);
 
     const chats = await chatModel.find({ user: userId }).sort({ lastActivity: -1 });

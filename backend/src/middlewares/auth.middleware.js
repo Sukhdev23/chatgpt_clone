@@ -2,37 +2,27 @@ const jwt = require("jsonwebtoken");
 
 const AuthUser = (req, res, next) => {
   try {
-    let token = null;
+    console.log("👉 Auth middleware triggered");
+    console.log("Cookies:", req.cookies);
+    console.log("Authorization Header:", req.headers["authorization"]);
 
-    // 1. Token from cookies
-    if (req.cookies?.token) {
-      token = req.cookies.token;
-    }
-
-    // 2. Token from Authorization header (Bearer <token>)
-    else if (
-      req.headers["authorization"] &&
-      req.headers["authorization"].startsWith("Bearer ")
-    ) {
-      token = req.headers["authorization"].split(" ")[1];
-    }
-
-    console.log("🔑 Token received:", token ? "Yes" : "No");
+    const token =
+      req.cookies?.token ||
+      req.headers["authorization"]?.split(" ")[1];
 
     if (!token) {
+      console.log("❌ No token provided");
       return res.status(401).json({ error: "Unauthorized, token missing" });
     }
 
-    // ✅ Verify token
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    console.log("✅ Token decoded:", decoded);
 
-    // ✅ Attach user to request
     req.user = decoded;
-
     next();
   } catch (err) {
-    console.error("❌ Token verify error:", err.message);
-    return res.status(401).json({ msg: "Token is not valid" });
+    console.error("❌ AuthUser Error:", err);
+    res.status(401).json({ error: "Unauthorized" });
   }
 };
 

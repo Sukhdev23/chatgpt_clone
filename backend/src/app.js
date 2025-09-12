@@ -19,7 +19,7 @@ app.use(express.json());
 app.use(cookieParser());
 
 app.use('/api/auth', authRoutes);
-app.use('/api', chatRoutes);
+app.use('/api/chats', chatRoutes);
 
 app.use(express.static(path.join(__dirname, '../public')));
 app.get("*name", (req, res) => {
