@@ -278,6 +278,7 @@ body {
   }
   .sidebar:not(.closed) ~ .hamburger-btn {
     left: 270px; /* 260px + gap */
+    
   }
 }
 

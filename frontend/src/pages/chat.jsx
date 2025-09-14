@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
+import { CiMenuFries } from "react-icons/ci";
 import {
   addMessage,
   setActiveChat,
@@ -226,10 +227,10 @@ const Chat = () => {
         </ul>
       </div>
 
-     {/* Hamburger only when sidebar closed */}
+{/* Hamburger only when sidebar closed */}
 {!sidebarOpen && (
   <button className="hamburger-btn" onClick={() => setSidebarOpen(true)}>
-    ☰
+    <CiMenuFries size={22} />
   </button>
 )}
 
