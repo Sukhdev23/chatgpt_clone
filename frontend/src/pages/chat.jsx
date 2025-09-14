@@ -10,46 +10,37 @@ import MessageBubble from "../components/MessageBubble";
 import { io } from "socket.io-client";
 import axios from "axios";
 import "./chat.css";
-import { useNavigate } from "react-router-dom"; // ✅ add this
-
-// socket will be created per-component so we can attach auth token
-
+import { useNavigate } from "react-router-dom";
 
 const Chat = () => {
   const chats = useSelector((state) => state.chat.chats);
   const activeChatIndex = useSelector((state) => state.chat.activeChatIndex);
   const dispatch = useDispatch();
+
   const [input, setInput] = useState("");
   const [newChatTitle, setNewChatTitle] = useState("");
   const [showInput, setShowInput] = useState(false);
-  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [sidebarOpen, setSidebarOpen] = useState(false); // ❌ default false for mobile
   const textareaRef = useRef(null);
   const chatBoxRef = useRef(null);
   const socketRef = useRef(null);
-  const navigate = useNavigate(); // ✅ add this
+  const navigate = useNavigate();
 
-  // send cookies by default for all axios requests (backend uses cookie auth)
   axios.defaults.withCredentials = true;
-
 
   const handleSend = async () => {
     if (!input.trim()) return;
     const currentChat = chats[activeChatIndex];
     const chatId = currentChat._id;
-  dispatch(addMessage({ chat: chatId, role: "user", content: input }));
+
+    dispatch(addMessage({ chat: chatId, role: "user", content: input }));
     setInput("");
     if (textareaRef.current) textareaRef.current.style.height = "40px";
+
     try {
-      // await axios.post(
-      //   `http://localhost:3000/api/chats/${chatId}/messages`,
-      //   { content: input },
-      //   { withCredentials: true }
-      // );
-      // send via socket if connected, else fall back to HTTP (if backend supports it)
       if (socketRef.current && socketRef.current.connected) {
         socketRef.current.emit("ai-message", { chat: chatId, content: input });
       } else {
-        // optional: attempt HTTP POST if socket not available
         await axios.post(
           `https://chatgpt-clone-ruzm.onrender.com/api/chats/${chatId}/messages`,
           { content: input }
@@ -77,7 +68,6 @@ const Chat = () => {
   };
 
   useEffect(() => {
-    // install interceptor to catch 401 globally and redirect to login
     const interceptorId = axios.interceptors.response.use(
       (response) => response,
       (error) => {
@@ -90,13 +80,11 @@ const Chat = () => {
 
     async function fetchChats() {
       try {
-        // attach token from localStorage if available
         const token = localStorage.getItem("token");
         if (token) {
           axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
         }
 
-        // create socket with token auth (so server can verify websocket)
         if (!socketRef.current) {
           try {
             const s = io("https://chatgpt-clone-ruzm.onrender.com", {
@@ -110,26 +98,26 @@ const Chat = () => {
           }
         }
 
-        const res = await axios.get("https://chatgpt-clone-ruzm.onrender.com/api/chats", {
-          withCredentials: true,
-        });
-        console.log(res);
-        
+        const res = await axios.get(
+          "https://chatgpt-clone-ruzm.onrender.com/api/chats",
+          { withCredentials: true }
+        );
+
         const chatsFromDb = Array.isArray(res.data)
           ? res.data.map((chat) => ({ ...chat, messages: chat.messages || [] }))
           : [{ title: "Chat", messages: [] }];
+
         dispatch(setChats(chatsFromDb));
       } catch (err) {
-        // If unauthorized, interceptor already navigates; return early to avoid noisy logs
         if (err?.response?.status === 401) return;
         console.error("Failed to fetch chats:", err);
       }
     }
+
     fetchChats();
 
-    // When AI responds (wire up socket listeners if socket exists)
     if (socketRef.current) {
-      socketRef.current.on("ai-response", async (data) => {
+      socketRef.current.on("ai-response", (data) => {
         dispatch(
           addMessage({ chat: data.chat, role: "model", content: data.content })
         );
@@ -150,15 +138,11 @@ const Chat = () => {
       if (socketRef.current) {
         socketRef.current.off("ai-response");
         socketRef.current.off("ai-error");
-        // optional: disconnect socket when component unmounts
         try {
           socketRef.current.disconnect();
-        } catch (e) {
-          /* ignore */
-        }
+        } catch {}
         socketRef.current = null;
       }
-      // cleanup axios interceptor
       axios.interceptors.response.eject(interceptorId);
     };
   }, [dispatch, navigate]);
@@ -174,6 +158,9 @@ const Chat = () => {
 
   const handleChatSelect = (idx) => {
     dispatch(setActiveChat(idx));
+    if (window.innerWidth <= 768) {
+      setSidebarOpen(false); // ✅ Auto-close on mobile
+    }
   };
 
   const handleAddChat = async () => {
@@ -199,19 +186,18 @@ const Chat = () => {
         <div className="sidebar-header">
           {sidebarOpen && <h2>Chats</h2>}
           <div className="sidebar-buttons">
+            {sidebarOpen && (
+              <button onClick={() => setSidebarOpen(false)} title="Close Sidebar">
+                ✖
+              </button>
+            )}
             <button onClick={() => setShowInput((v) => !v)} title="Add Chat">
               +
-            </button>
-            <button
-              onClick={() => setSidebarOpen((v) => !v)}
-              title="Toggle Sidebar"
-            >
-              {sidebarOpen ? "⏴" : "⏵"}
             </button>
           </div>
         </div>
 
-        {showInput && (
+        {showInput && sidebarOpen && (
           <div className="new-chat">
             <input
               type="text"
@@ -240,24 +226,27 @@ const Chat = () => {
         </ul>
       </div>
 
+     {/* Hamburger only when sidebar closed */}
+{!sidebarOpen && (
+  <button className="hamburger-btn" onClick={() => setSidebarOpen(true)}>
+    ☰
+  </button>
+)}
+
+
       {/* Main Chat */}
       <div className="main-chat">
         <div className="messages" ref={chatBoxRef}>
           {chats[activeChatIndex] &&
           Array.isArray(chats[activeChatIndex].messages) ? (
             chats[activeChatIndex].messages.map((msg, i) => (
-              <MessageBubble
-                key={i}
-                sender={msg.role}
-                content={msg.content}
-              />
+              <MessageBubble key={i} sender={msg.role} content={msg.content} />
             ))
           ) : (
             <div className="empty">No messages</div>
           )}
         </div>
 
-        {/* Input */}
         <div className="chat-input">
           <textarea
             ref={textareaRef}

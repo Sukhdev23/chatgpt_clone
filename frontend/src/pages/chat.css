@@ -25,6 +25,15 @@ body {
 
 .sidebar.closed {
   width: 60px;
+  overflow: hidden; /* text chhup jaye, icons visible rahen */
+}
+
+/* Sidebar text ko hide karna jab closed */
+.sidebar.closed .sidebar-header h2,
+.sidebar.closed .new-chat input,
+.sidebar.closed .new-chat button,
+.sidebar.closed .chat-list li span {
+  display: none;
 }
 
 .sidebar-header {
@@ -209,6 +218,7 @@ body {
     bottom: 0;
     transform: translateX(-100%);
     z-index: 1000;
+    width: 220px;
   }
 
   .sidebar.open {
@@ -241,5 +251,42 @@ body {
   }
   .chat-input textarea {
     font-size: 0.85rem;
+  }
+}
+
+/* ===== Hamburger Button ===== */
+.hamburger-btn {
+  position: fixed;
+  top: 10px;
+  background: #10a37f;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 6px 10px;
+  font-size: 20px;
+  cursor: pointer;
+  z-index: 1100;
+}
+
+/* Desktop (>=769px): hamburger sidebar ke baad dikhna chahiye */
+@media (min-width: 769px) {
+  .hamburger-btn {
+    display: block;
+  }
+  .sidebar.closed ~ .hamburger-btn {
+    left: 65px; /* 60px + gap */
+  }
+  .sidebar:not(.closed) ~ .hamburger-btn {
+    left: 270px; /* 260px + gap */
+  }
+}
+
+/* Mobile (<768px): hamburger fixed top-left */
+@media (max-width: 768px) {
+  .hamburger-btn {
+    left: 10px;
+  }
+  .sidebar.open ~ .hamburger-btn {
+    left: 230px; /* sidebar width ke hisab se */
   }
 }
