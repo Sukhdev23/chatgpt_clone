@@ -1,6 +1,10 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { CiMenuFries } from "react-icons/ci";
+import { CiMenuFries , } from "react-icons/ci";
+import { FiMessageSquare } from "react-icons/fi";
+import { FaPlus } from "react-icons/fa6";
+import { IoClose } from "react-icons/io5";
+
 import {
   addMessage,
   setActiveChat,
@@ -29,11 +33,13 @@ const Chat = () => {
 
   axios.defaults.withCredentials = true;
 
+  
   const handleSend = async () => {
     if (!input.trim()) return;
     const currentChat = chats[activeChatIndex];
     const chatId = currentChat._id;
-
+    console.log('active chat index' , chats );
+    
     dispatch(addMessage({ chat: chatId, role: "user", content: input }));
     setInput("");
     if (textareaRef.current) textareaRef.current.style.height = "40px";
@@ -189,11 +195,11 @@ const Chat = () => {
           <div className="sidebar-buttons">
             {sidebarOpen && (
               <button onClick={() => setSidebarOpen(false)} title="Close Sidebar">
-                ✖
+                <IoClose size={22}/>
               </button>
             )}
             <button onClick={() => setShowInput((v) => !v)} title="Add Chat">
-              +
+                  <FaPlus/>
             </button>
           </div>
         </div>
@@ -218,7 +224,7 @@ const Chat = () => {
                 className={i === activeChatIndex ? "active" : ""}
                 onClick={() => handleChatSelect(i)}
               >
-                {sidebarOpen ? chat.title : "💬"}
+                {sidebarOpen ? chat.title : <FiMessageSquare />}
               </li>
             ))
           ) : (
@@ -244,7 +250,13 @@ const Chat = () => {
               <MessageBubble key={i} sender={msg.role} content={msg.content} />
             ))
           ) : (
-            <div className="empty">No messages</div>
+            <div className="empty-state">
+        <div className="empty-icon">💬</div>
+        <h2 className="empty-title">Start a new conversation</h2>
+        <p className="empty-text">
+          Send a message below to begin chatting with AI.
+        </p>
+      </div>
           )}
         </div>
 

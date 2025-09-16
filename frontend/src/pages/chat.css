@@ -9,12 +9,13 @@ body {
 .chat-container {
   display: flex;
   height: 100vh;
+  width: 100vw;
   overflow: hidden;
 }
 
 /* ====== Sidebar ====== */
 .sidebar {
-  background-color: #202123;
+  background-color: #171717;
   border-right: 1px solid #2a2b32;
   color: #fff;
   width: 260px;
@@ -99,15 +100,17 @@ body {
 .chat-list li {
   padding: 12px 16px;
   cursor: pointer;
+  margin-right: 8px;
   font-size: 0.95rem;
   border-bottom: 1px solid #2a2b32;
+  border-radius: 0 10px 10px 0;
   transition: background 0.2s;
 }
 .chat-list li:hover {
   background-color: #2a2b32;
 }
 .chat-list li.active {
-  background-color: #10a37f;
+  background-color: #242424;
   color: #fff;
 }
 .chat-list li.empty {
@@ -121,7 +124,8 @@ body {
   flex: 1;
   display: flex;
   flex-direction: column;
-  background-color: #343541;
+  height: 100%;
+  background-color: #212121;
   position: relative;
 }
 
@@ -129,13 +133,37 @@ body {
 .messages {
   flex: 1;
   overflow-y: auto;
+  padding: 1rem;
+}
+
+.empty-state {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: #f2eded;
+  text-align: center;
   padding: 20px;
 }
-.messages .empty {
-  text-align: center;
-  color: #888;
-  margin-top: 30px;
+
+.empty-icon {
+  font-size: 3rem;
+  margin-bottom: 12px;
 }
+
+.empty-title {
+  font-size: 1.4rem;
+  font-weight: bold;
+  margin-bottom: 6px;
+  color: #e0e0e0;
+}
+
+.empty-text {
+  font-size: 1rem;
+  color: #aaa;
+}
+
 
 /* ====== Input Box ====== */
 .chat-input {
@@ -173,7 +201,7 @@ body {
   transition: background 0.2s;
 }
 .chat-input button:hover {
-  background-color: #0e8c6c;
+  background-color: #242424;
 }
 .chat-input svg {
   fill: #fff;
@@ -291,3 +319,4 @@ body {
     left: 230px; /* sidebar width ke hisab se */
   }
 }
+
