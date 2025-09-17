@@ -174,7 +174,7 @@
 .chat-input {
   display: flex;
   align-items: center;
-  padding: 10px 22px;
+  padding: 4px 22px;
   max-width: 700px; /* ✅ ek max-width fix kar do */
   width: 80%; /* ✅ responsive rahe */
   margin: 0 auto; /* ✅ center me fix */
@@ -192,14 +192,14 @@
   resize: none; /* ✅ sirf auto height, width lock */
   width: 100%; /* ✅ parent ke andar hi rahe */
   min-width: 0;
-  max-height: 40px; /* ✅ flexbox overflow stop */
+  height: 20px; 
+  max-height: 20px; /* ✅ flexbox overflow stop */
   border: none;
   outline: none;
   background: transparent;
   color: #fff;
   font-size: 1rem;
   border-radius: 8px;
-  max-height: 150px;
   overflow-y: auto;
 }
 
@@ -269,11 +269,6 @@
     width: 100%;
   }
 
-  /* .chat-input textarea {
-    font-size: 0.9rem;
-    padding: 8px;
-  } */
-
   .chat-input button {
     padding: 8px;
   }
@@ -289,7 +284,7 @@
     padding: 10px 12px;
   }
   .chat-input {
-    bottom: 40px;
+    bottom: 20px;
     max-width: 700px; /* ✅ ek max-width fix kar do */
     width: 70%; /* ✅ responsive rahe */
     margin: 0 auto;

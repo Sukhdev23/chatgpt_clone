@@ -88,7 +88,7 @@ function initsocketserver(httpServer) {
 
         const ltm = [
           {
-            role: "system",
+            role: "model",
             parts: [
               {
                 text: "You are a friendly human-like assistant. Reply naturally like a person, not like a bot.",
@@ -101,7 +101,7 @@ function initsocketserver(httpServer) {
           })),
           {
             role: "user",
-            parts: [{ text: input }], // latest user input
+            parts: [{ text: data.content }], // latest user input
           },
         ];
 

@@ -42,7 +42,6 @@ const Chat = () => {
     
     dispatch(addMessage({ chat: chatId, role: "user", content: input }));
     setInput("");
-    if (textareaRef.current) textareaRef.current.style.height = "40px";
 
     try {
       if (socketRef.current && socketRef.current.connected) {
