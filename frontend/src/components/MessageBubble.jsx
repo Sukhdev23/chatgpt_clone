@@ -7,7 +7,6 @@ const MessageBubble = ({ sender, content }) => {
   return (
     <div className={`bubble ${isUser ? "user-bubble" : "ai-bubble"}`} style={{ alignSelf: isUser ? "flex-end" : "flex-start" }}>
       <div className="avatar">
-        {isUser ? <span>🧑</span> : <span>🤖</span>}
       </div>
       <div className="bubble-content">{content}</div>
     </div>

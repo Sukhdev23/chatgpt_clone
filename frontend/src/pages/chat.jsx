@@ -66,12 +66,10 @@ const Chat = () => {
   };
 
   const handleInputChange = (e) => {
-    setInput(e.target.value);
-    if (textareaRef.current) {
-      textareaRef.current.style.height = "40px";
-      textareaRef.current.style.height =
-        textareaRef.current.scrollHeight + "px";
-    }
+   setInput(e.target.value);
+  const textarea = textareaRef.current;
+  textarea.style.height = "auto";  // reset
+  textarea.style.height = textarea.scrollHeight + "px"
   };
 
   useEffect(() => {
@@ -263,7 +261,7 @@ const Chat = () => {
         <div className="chat-input">
           <textarea
             ref={textareaRef}
-            placeholder="Type your message..."
+            placeholder="Ask anything"
             value={input}
             onChange={handleInputChange}
             onKeyDown={(e) => {

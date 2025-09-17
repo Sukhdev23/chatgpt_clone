@@ -1,7 +1,6 @@
 /* Bubble wrapper */
 .bubble {
   display: flex;
-  align-items: flex-start;
   max-width: 80%;
   margin: 10px;
   gap: 8px;
@@ -19,7 +18,7 @@
 
 /* Chat bubble content */
 .bubble-content {
-  padding: 10px 14px;
+  padding: 8px 14px;
   border-radius: 12px;
   font-size: 0.95rem;
   line-height: 1.4;
@@ -32,7 +31,7 @@
   flex-direction: row-reverse;
 }
 .user-bubble .bubble-content {
-  background-color: #10a37f;
+  background-color: #303030;
   color: #fff;
   border-bottom-right-radius: 4px;
 }
@@ -42,7 +41,6 @@
   align-self: flex-start;
 }
 .ai-bubble .bubble-content {
-  background-color: #40414f;
   color: #ececec;
   border-bottom-left-radius: 4px;
 }

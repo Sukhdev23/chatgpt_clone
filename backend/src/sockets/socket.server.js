@@ -15,7 +15,7 @@ function initsocketserver(httpServer) {
         "https://chatgpt-clone-ruzm.onrender.com",
       ],
       methods: ["GET", "POST"],
-      credentials: true
+      credentials: true,
     },
   });
 
@@ -88,14 +88,20 @@ function initsocketserver(httpServer) {
 
         const ltm = [
           {
-            role: "user",
+            role: "system",
             parts: [
               {
-                text:
-                  `"these are the previous chat use them and generate a response"` +
-                  memory.map((mem) => `\n- ${mem.metadata.text}`).join(""),
+                text: "You are a friendly human-like assistant. Reply naturally like a person, not like a bot.",
               },
             ],
+          },
+          ...memory.map((mem) => ({
+            role: mem.role || "user", // agar role stored hai to use karo
+            parts: [{ text: mem.metadata.text }],
+          })),
+          {
+            role: "user",
+            parts: [{ text: input }], // latest user input
           },
         ];
 
