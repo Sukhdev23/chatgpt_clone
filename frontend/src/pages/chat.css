@@ -113,8 +113,7 @@
 }
 
 /* ====== Main Chat ====== */
-.main-chat,
-.chat-box {
+.main-chat {
   flex: 1;
   min-height: 0;
   height: 100vh;
@@ -126,7 +125,7 @@
   align-items: center;
 }
 
-.chat-box.empty {
+.empty {
   justify-content: center;
   align-items: center;
 }
@@ -138,7 +137,8 @@
   min-height: 0;
   overflow-y: auto; /* sirf messages scrollable ho */
   -webkit-overflow-scrolling: touch; /* smooth scroll iOS/Android */
-  padding: 2rem;
+  padding: 1rem;
+  margin-bottom: 35px;
   padding-left: 15vw;
 }
 
