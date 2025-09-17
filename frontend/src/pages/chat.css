@@ -1,10 +1,9 @@
-
 /* Ensure the outer wrapper fills the viewport and uses flex layout */
 .chat-container {
   display: flex;
   flex: 1;
   background: #212121;
-  height: 100vh; 
+  height: 100vh;
 }
 
 /* ====== Sidebar ====== */
@@ -114,7 +113,8 @@
 }
 
 /* ====== Main Chat ====== */
-.main-chat, .chat-box {
+.main-chat,
+.chat-box {
   flex: 1;
   min-height: 0;
   height: 100vh;
@@ -136,7 +136,7 @@
 .messages {
   flex: 1;
   min-height: 0;
-   overflow-y: auto;  /* sirf messages scrollable ho */
+  overflow-y: auto; /* sirf messages scrollable ho */
   -webkit-overflow-scrolling: touch; /* smooth scroll iOS/Android */
   padding: 1rem;
   padding-left: 15vw;
@@ -175,9 +175,9 @@
   display: flex;
   align-items: center;
   padding: 10px 22px;
-  max-width: 700px;   /* ✅ ek max-width fix kar do */
-  width: 100%;        /* ✅ responsive rahe */
-  margin: 0 auto;     /* ✅ center me fix */
+  max-width: 700px; /* ✅ ek max-width fix kar do */
+  width: 80%; /* ✅ responsive rahe */
+  margin: 0 auto; /* ✅ center me fix */
   border-top: 1px solid #2a2b32;
   border-radius: 40px;
   background-color: #303030;
@@ -189,10 +189,10 @@
 
 .chat-input textarea {
   flex: 1;
-  resize: none;       /* ✅ sirf auto height, width lock */
-  width: 100%;        /* ✅ parent ke andar hi rahe */
-  min-width: 0; 
-  max-height: 40px;      /* ✅ flexbox overflow stop */
+  resize: none; /* ✅ sirf auto height, width lock */
+  width: 100%; /* ✅ parent ke andar hi rahe */
+  min-width: 0;
+  max-height: 40px; /* ✅ flexbox overflow stop */
   border: none;
   outline: none;
   background: transparent;
@@ -202,7 +202,6 @@
   max-height: 150px;
   overflow-y: auto;
 }
-
 
 .chat-input button {
   margin-left: 10px;
@@ -251,8 +250,6 @@
 
 /* For mobile screens */
 @media (max-width: 768px) {
-
-
   .sidebar {
     position: absolute;
     top: 0;
@@ -291,13 +288,15 @@
     font-size: 0.85rem;
     padding: 10px 12px;
   }
-   .chat-input {
-     bottom: 40px;
+  .chat-input {
+    bottom: 40px;
+    max-width: 700px; /* ✅ ek max-width fix kar do */
+    width: 70%; /* ✅ responsive rahe */
+    margin: 0 auto;
   }
   .chat-input textarea {
     font-size: 0.85rem;
   }
- 
 }
 
 /* ===== Hamburger Button ===== */
